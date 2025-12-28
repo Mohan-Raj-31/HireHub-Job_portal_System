@@ -31,12 +31,12 @@ public class FrontService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // 1. View all jobs
+    // View all jobs
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
     }
 
-    // 2. Search jobs
+    // Search jobs
     public List<Job> searchJobsByTitle(String title) {
         return jobRepository.findByTitleContainingIgnoreCase(title);
     }
@@ -53,13 +53,13 @@ public class FrontService {
         return jobRepository.findByExperienceLessThanEqual(experience);
     }
 
-    // 3. Job details
+    // Job details
     public Job getJobDetails(int jobId) {
         return jobRepository.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job Not found with this id: "+jobId));
     }
 
-    // 4. View recruiter profile
+    // View recruiter profile
     public RecruiterProfile getRecruiterProfile(int userId) {
         return recruiterProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Recruiter not found with id: " + userId));

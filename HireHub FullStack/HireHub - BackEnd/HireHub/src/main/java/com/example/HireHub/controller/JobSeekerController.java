@@ -67,7 +67,7 @@ public class JobSeekerController {
                 college,previousOrganization,file,principal.getId()));
     }
 
-    // 5. view Job Seeker profile
+    // view Job Seeker profile
     @GetMapping("/profile")
     public ResponseEntity<JobSeekerProfile> getJobSeekerProfile(@AuthenticationPrincipal UserPrincipal principal){
         return ResponseEntity.ok(jobSeekerService.getJobSeekerProfile(principal.getId()));

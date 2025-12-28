@@ -106,7 +106,7 @@ public class JobSeekerService {
         profile.setCollege(college);
         profile.setPreviousOrganization(previousOrganization);
 
-        // ✅ Update resume only if a new file is uploaded
+        // Update resume only if a new file is uploaded
         if (file != null && !file.isEmpty()) {
             profile.setResume(file.getBytes());
         }
@@ -114,7 +114,7 @@ public class JobSeekerService {
         return jobSeekerProfileRepository.save(profile);
     }
 
-    // 5. Job Seeker profile
+    // Job Seeker profile
     public JobSeekerProfile getJobSeekerProfile(int userId) {
         return jobSeekerProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Job Seeker not found with id: " + userId));

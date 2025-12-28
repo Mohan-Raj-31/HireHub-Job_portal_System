@@ -52,20 +52,20 @@ public class AuthService {
                     )
             );
 
-            // ✅ Set authentication context
+            // Set authentication context
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
             securityContext.setAuthentication(authentication);
             SecurityContextHolder.setContext(securityContext);
 
-            // ✅ Store context in HTTP session (this is what ties session login)
+            // Store context in HTTP session (this is what ties session login)
             HttpSession session = request.getSession(true);
             session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
 
-            // ✅ Load user info from DB
+            // Load user info from DB
             Users user = userRepository.findByUsername(loginRequest.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // ✅ Hide sensitive info before sending back
+            //  Hide sensitive info before sending back
             user.setPassword(null);
 
             return user;

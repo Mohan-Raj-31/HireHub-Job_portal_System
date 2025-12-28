@@ -17,13 +17,13 @@ public class FrontController {
     @Autowired
     private FrontService frontService;
 
-    // 1. View all jobs
+    // View all jobs
     @GetMapping("/jobs")
     public ResponseEntity<List<Job>> getAllJobs(){
         return ResponseEntity.ok(frontService.getAllJobs());
     }
 
-    // 2. Search jobs
+    // Search jobs
     @GetMapping("/jobs/search/title")
     public ResponseEntity<List<Job>> searchJobsByTitle(@RequestParam String title){
         return ResponseEntity.ok(frontService.searchJobsByTitle(title));
@@ -44,13 +44,13 @@ public class FrontController {
         return ResponseEntity.ok(frontService.filterJobsByExperience(experience));
     }
 
-    // 3. Job details
+    // Job details
     @GetMapping("/jobs/{jobId}")
     public ResponseEntity<Job> getJobDetails(@PathVariable int jobId){
         return ResponseEntity.ok(frontService.getJobDetails(jobId));
     }
 
-    // 4. View recruiter profile
+    // View recruiter profile
     @GetMapping("/recruiter/{userId}")
     public ResponseEntity<RecruiterProfile> getRecruiterProfile(@PathVariable int userId){
         return ResponseEntity.ok(frontService.getRecruiterProfile(userId));

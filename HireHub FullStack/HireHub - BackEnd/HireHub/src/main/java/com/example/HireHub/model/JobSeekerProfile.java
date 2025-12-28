@@ -22,7 +22,7 @@ public class JobSeekerProfile {
 
     private String email;
     private String skills;
-    private int experience; // years
+    private int experience; // in years
     private String education;
     private String college;
     private String previousOrganization;

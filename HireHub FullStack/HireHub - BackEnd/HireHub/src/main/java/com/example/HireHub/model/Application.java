@@ -21,7 +21,7 @@ public class Application {
     private LocalDateTime appliedAt;
 
     @Enumerated(EnumType.STRING)
-    private ApplicationStatus status; // APPLIED, SELECTED, REJECTED
+    private ApplicationStatus status;
 
     @ManyToOne
     @JoinColumn(name = "job_id",nullable = false)

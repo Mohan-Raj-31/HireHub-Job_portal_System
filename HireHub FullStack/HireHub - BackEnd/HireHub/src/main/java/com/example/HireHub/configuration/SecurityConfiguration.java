@@ -32,17 +32,17 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // use your bean
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()   // public login/register endpoints
-                        .requestMatchers("/front/**").permitAll()  // public browsing endpoints
+                        .requestMatchers("/front/**").permitAll()
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER")
                         .requestMatchers("/jobseeker/**").hasRole("JOB_SEEKER")
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults()) // ✅ allow basic auth for testing
+                .httpBasic(Customizer.withDefaults()) // allow for testing in postman
                 .formLogin(form -> form.disable())
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)) // ✅ keep session cookies
+                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .logout(logout -> logout
                 .logoutUrl("/auth/logout")
                 .invalidateHttpSession(true)
