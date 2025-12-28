@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HireHub — Create Job Seeker Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --blue-1: #004aad;
+      --blue-2: #0078d4;
+      --bg: #f4f6f9;
+      --muted: #6b7280;
+      --danger: #e63946;
+      --success: #16a34a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: #1f2937;
+    }
+    .topbar {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 22px;
+      box-shadow: 0 2px 8px rgba(16,24,40,0.06);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-title { color: var(--blue-1); font-size: 20px; font-weight: 700; }
+    .container {
+      max-width: 650px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    h2 {
+      text-align: center;
+      color: var(--blue-1);
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--blue-1);
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--blue-2);
+      background: #fff;
+    }
+    textarea { resize: vertical; height: 80px; }
+    .file-input {
+      border: 2px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 10px;
+      background: #f9fafb;
+      transition: border-color 0.3s;
+    }
+    .file-input:hover { border-color: var(--blue-2); }
+    .file-name {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--blue-2), var(--blue-1));
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      width: 100%;
+      transition: 0.2s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(3,105,161,0.12);
+    }
+    .message {
+      text-align: center;
+      font-weight: 600;
+      margin-top: 16px;
+    }
+    .success { color: var(--success); }
+    .error { color: var(--danger); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="top-left">
+      <h2 class="page-title">Create Your Profile</h2>
+    </div>
+  </header>
+
+  <div class="container">
+    <h2>Complete Your Profile</h2>
+    <form id="profileForm">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" name="fullName" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="skills">Skills (comma separated)</label>
+      <input type="text" id="skills" name="skills" placeholder="Java, React, SQL" required>
+
+      <label for="experience">Experience (in years)</label>
+      <input type="number" id="experience" name="experience" min="0" required>
+
+      <label for="education">Education</label>
+      <input type="text" id="education" name="education" required>
+
+      <label for="college">College</label>
+      <input type="text" id="college" name="college" required>
+
+      <label for="previousOrganization">Previous Organization(optional)</label>
+      <input type="text" id="previousOrganization" name="previousOrganization" value="Fresher">
+
+      <label>Upload Resume (PDF only)</label>
+      <div class="file-input" id="fileBox">
+        <input type="file" id="resume" name="resume" accept="application/pdf" hidden required>
+        <span id="fileLabel">Click to select PDF</span>
+        <div class="file-name" id="fileName"></div>
+      </div>
+
+      <button type="submit" class="btn-primary">Save Profile</button>
+    </form>
+    <div id="message" class="message"></div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:8080";
+    const profileForm = document.getElementById("profileForm");
+    const fileBox = document.getElementById("fileBox");
+    const resumeInput = document.getElementById("resume");
+    const fileLabel = document.getElementById("fileLabel");
+    const fileName = document.getElementById("fileName");
+    const message = document.getElementById("message");
+
+    // Click file box → open file picker
+    fileBox.addEventListener("click", () => resumeInput.click());
+
+    // Show file name after selection
+    resumeInput.addEventListener("change", () => {
+      const file = resumeInput.files[0];
+      if (!file) return;
+
+      if (file.type !== "application/pdf") {
+        alert("Only PDF files are allowed!");
+        resumeInput.value = "";
+        fileName.textContent = "";
+        return;
+      }
+
+      fileLabel.textContent = "File Selected:";
+      fileName.textContent = file.name;
+    });
+
+    // Submit form
+    profileForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      message.textContent = "";
+      message.className = "message";
+
+      const formData = new FormData(profileForm);
+
+      try {
+        const res = await fetch(`${API_BASE}/jobseeker/profile/create`, {
+          method: "POST",
+          body: formData,
+          credentials: "include"
+        });
+
+        if (res.ok) {
+          message.textContent = "✅ Profile created successfully!";
+          message.classList.add("success");
+          setTimeout(() => window.location.href = "jobseeker.html", 1500);
+        } else if (res.status === 401 || res.status === 403) {
+          alert("Please login first!");
+          window.location.href = "login.html";
+        } else {
+          const err = await res.text();
+          message.textContent = "❌ Failed to create profile: " + err;
+          message.classList.add("error");
+        }
+      } catch (error) {
+        console.error(error);
+        message.textContent = "❌ Network error. Please try again.";
+        message.classList.add("error");
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HireHub - Recruiter Dashboard</title>
+    <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+      width: 240px;
+      background: linear-gradient(180deg, #004aad, #0078d4);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .sidebar a {
+      text-decoration: none;
+      color: white;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin: 6px 0;
+      transition: background 0.3s;
+      display: block;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .sidebar button {
+      margin-top: auto;
+      padding: 12px;
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .sidebar button:hover {
+      background: #e63946;
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---------- TOPBAR ---------- */
+    .topbar {
+      background: white;
+      padding: 15px 25px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .topbar h1 {
+      font-size: 22px;
+      color: #004aad;
+      margin: 0;
+    }
+    .topbar span {
+      font-weight: 500;
+      color: #333;
+    }
+
+    /* ---------- DASHBOARD CARDS ---------- */
+    .dashboard {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 25px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+    .card h3 {
+      color: #004aad;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+    .card p {
+      color: #666;
+      font-size: 15px;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #f0f0f0;
+      font-size: 14px;
+      color: #777;
+    }
+
+    /* ---------- LOGOUT POPUP ---------- */
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.popup-box {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  width: 300px;
+  text-align: center;
+}
+
+.popup-box h3 {
+  margin-bottom: 30px;
+  color: #1e1e1e;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.popup-buttons .yes {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: bold;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.popup-buttons .no {
+  background: #d6d6d6;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: bold;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.popup-buttons .yes:hover {
+  background: #e63946;
+}
+
+.popup-buttons .no:hover {
+  background: #b0b0b0;
+}
+
+
+    </style>
+</head>
+<body>
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>🎯 HireHub</h2>
+        <a href="#" class="active" id="dashboardLink">🏠 Dashboard</a>
+        <a href="#" id="jobsLink">💼 My Jobs</a>
+        <a href="#" id="postJobLink">📝 Post Job</a>
+        <!-- <a href="#" id="applicantsLink">👥 View Applicants</a> -->
+        <a href="#" id="profileLink">👤 Profile</a>
+        <button id="logoutBtn">Logout</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="topbar">
+            <h1>Recruiter Dashboard</h1>
+            <span id="welcomeMsg">Welcome, Recruiter</span>
+        </div>
+
+    <div class="dashboard">
+        <div class="card" id="viewJobsCard">
+          <h3>My Jobs</h3>
+          <p>View, edit, or delete your job postings.</p>
+        </div>
+        <div class="card" id="postJobCard">
+          <h3>Post a New Job</h3>
+          <p>Create and publish new job openings easily.</p>
+        </div>
+        <div class="card" id="profileCard">
+          <h3>My Profile</h3>
+          <p>Update your recruiter information and details.</p>
+        </div>
+    </div>
+
+        <footer>
+        © 2025 HireHub — Empowering Recruiters and Job Seekers
+        </footer>
+    </div>
+
+    <!-- Logout Confirmation Popup -->
+    <div id="logoutPopup" class="popup-overlay" style="display:none;">
+      <div class="popup-box">
+        <h3>Are you sure you want to logout?</h3>
+        <div class="popup-buttons">
+          <button id="confirmLogout" class="yes">Yes, Logout</button>
+          <button id="cancelLogout" class="no">No, Stay Logged In</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+
+        // Load Recruiter Name
+        document.addEventListener("DOMContentLoaded", () => {
+            const username = localStorage.getItem("username") || "Rectuiter";
+            document.getElementById("welcomeMsg").textContent = "Welcome, " + username;
+        });
+
+        document.getElementById("jobsLink").addEventListener("click", () => {
+            window.location.href = "recruiter-jobs.html";
+        });
+
+        document.getElementById("postJobLink").addEventListener("click", () => {
+            window.location.href = "recruiter-postjob.html";
+        });
+
+        document.getElementById("profileLink").addEventListener("click", () => {
+            window.location.href = "recruiter-profile.html";
+        });
+
+        // Dashboard cards also redirect
+        document.getElementById("viewJobsCard").onclick = () => window.location.href = "recruiter-jobs.html";
+        document.getElementById("postJobCard").onclick = () => window.location.href = "recruiter-postjob.html";
+        document.getElementById("profileCard").onclick = () => window.location.href = "recruiter-profile.html";
+
+         // ---------- Logout Confirmation ----------
+        const logoutBtn = document.getElementById("logoutBtn");
+        const logoutPopup = document.getElementById("logoutPopup");
+        const confirmLogout = document.getElementById("confirmLogout");
+        const cancelLogout = document.getElementById("cancelLogout");
+
+        logoutBtn.addEventListener("click", () => {
+          logoutPopup.style.display = "flex"; // Show popup
+        });
+
+        cancelLogout.addEventListener("click", () => {
+          logoutPopup.style.display = "none"; // Hide popup
+        });
+
+        confirmLogout.addEventListener("click", () => {
+          localStorage.clear();
+          window.location.href = "login.html";
+        });
+
+    </script>
+    
+</body>
+</html>

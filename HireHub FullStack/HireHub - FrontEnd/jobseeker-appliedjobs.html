@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Applied Jobs - HireHub</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f4f6f8;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(to right, #0073d2, #001c3f);
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 30px;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    header button {
+      background-color: white;
+      color: #004aad;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 17px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 600;
+    }
+
+    header button:hover {
+      background-color: #7f7f7f;
+    }
+
+    /* Main container */
+    .container {
+      padding: 30px 60px;
+    }
+
+    /* Job cards grid */
+    .jobs-grid {
+      display: grid;
+      /* grid-template-columns: repeat(auto-fit, minmax(700px, 1fr)); */
+      gap: 20px;
+    }
+
+    .job-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      transition: 0.3s ease;
+      cursor: pointer;
+      border-left: 5px solid transparent;
+    }
+
+    .job-card:hover {
+      transform: translateY(-4px);
+      border-left: 5px solid #004aad;
+    }
+
+    .job-title {
+      font-size: 20px;
+      font-weight: 650;
+      color: #5dac0d;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .company-name {
+      font-size: 17px;
+      font-weight: 500;
+      color: #2b2b2b;
+      margin-bottom: 6px;
+    }
+
+    .job-info {
+      font-size: 14px;
+      color: #353535;
+      margin: 4px 0;
+    }
+
+    .applied-date {
+      font-size: 11px;
+      color: #525252;
+      margin-top: 6px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .status.APPLIED {
+      background-color: #e0f0ff;
+      color: #004aad;
+    }
+
+    .status.SELECTED {
+      background-color: #e6f9ea;
+      color: #0f9d58;
+    }
+
+    .status.REJECTED {
+      background-color: #fdeaea;
+      color: #d93025;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #161515;
+      margin-top: 60px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>My Applied Jobs</h1>
+    <button onclick="window.location.href='jobseeker.html'">⮜⬅ Back to Dashboard</button>
+  </header>
+
+  <div class="container">
+    <div id="jobsGrid" class="jobs-grid"></div>
+    <div id="emptyState" class="empty-state" style="display: none;">
+      You haven’t applied for any jobs yet.
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:8080";
+
+    async function loadAppliedJobs() {
+      try {
+        const res = await fetch(`${API_BASE}/jobseeker/applied/jobs`, {
+          credentials: "include",
+        });
+
+        if (res.status === 401 || res.status === 403) {
+          alert("Please login first");
+          window.location.href = "login.html";
+          return;
+        }
+
+        const data = await res.json();
+        const grid = document.getElementById("jobsGrid");
+        const empty = document.getElementById("emptyState");
+
+        grid.innerHTML = "";
+
+        if (data.length === 0) {
+          empty.style.display = "block";
+          return;
+        }
+
+        empty.style.display = "none";
+
+        data.forEach((job) => {
+          const div = document.createElement("div");
+          div.classList.add("job-card");
+
+          const appliedDate = new Date(job.appliedAt);
+          const formattedDate = appliedDate.toLocaleString("en-IN", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+          });
+
+          div.innerHTML = `
+            <div class="job-title">${job.jobTitle} <span class="applied-date">${formattedDate}</span></div>
+            <div class="company-name">${job.companyName}</div>
+            <div class="job-info"><strong>Location:</strong> ${job.location}</div>
+            <div class="status ${job.status}">${job.status}</div>
+          `;
+
+          div.addEventListener("click", () => {
+            window.location.href = `jobseeker-jobdetails.html?jobId=${job.jobId}`;
+          });
+
+          grid.appendChild(div);
+        });
+      } catch (err) {
+        console.error("Error loading applied jobs:", err);
+        alert("Failed to load applied jobs. Please try again.");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadAppliedJobs);
+  </script>
+</body>
+</html>

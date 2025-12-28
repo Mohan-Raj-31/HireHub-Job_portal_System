@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - HireHub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, "Open Sans", sans-serif;
+      background: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .auth-container {
+      background: #fff;
+      width: 420px;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    .auth-container h2 {
+      margin-bottom: 25px;
+      color: #1976d2;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    .form-group input, .form-group select {
+      width: 94%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .form-group select{
+      width: 100%;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
+
+     .btn:hover {
+      background: #1257a6;
+    }
+
+    .auth-footer {
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .auth-footer a {
+      color: #1976d2;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <h2>👤Create Account</h2>
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" minlength="8" required>
+      </div>
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" required>
+          <option value="RECRUITER">Recruiter</option>
+          <option value="JOB_SEEKER">Job Seeker</option>
+        </select>
+      </div>
+        <button type="submit" class="btn">Register</button>
+    </form>
+    <div class="auth-footer">
+       Already have an account? <a href="login.html">Login</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit" , async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const role = document.getElementById("role").value;
+
+    // ✅ Basic validation before sending to backend
+    if (password.length < 8) {
+      alert("Password must be at least 8 characters long.");
+      return;
+    }
+
+    if (username === "" || email === "" || role === "") {
+      alert("Please fill all fields.");
+      return;
+    }
+
+      const response = await fetch("http://localhost:8080/auth/register" , {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password, role })
+      });
+
+      if(response.ok){
+        alert("Registration successful. Please login.");
+        window.location.href = "login.html";
+      } else {
+        alert("Registration failed. Try again.");
+      }
+    });
+  </script>
+
+</body>
+</html>

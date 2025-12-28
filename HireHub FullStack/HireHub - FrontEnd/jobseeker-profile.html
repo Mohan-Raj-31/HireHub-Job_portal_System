@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile - Jobseeker</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f9;
+    }
+
+    header {
+      background: linear-gradient(to right, #0073d2, #001c3f);
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .header-btns {
+      display: flex;
+      gap: 12px;
+    }
+
+    .header-btns button {
+      background-color: white;
+      color: #0078d7;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .header-btns button:hover {
+      background-color: #e8f3ff;
+    }
+
+    .container {
+      max-width: 750px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 30px 40px;
+    }
+
+    .profile-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #005aae;
+      margin-bottom: 25px;
+    }
+
+    .profile-info p {
+      font-size: 16px;
+      margin: 10px 0;
+      color: #474040;
+    }
+
+    .profile-info strong {
+      color: #000000;
+    }
+
+    .btn-group {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .btn {
+      background-color: #5c5c5c;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #2f2f2f;
+    }
+
+    #acc {
+      background-color: rgb(47, 134, 47);
+    }
+
+    #acc:hover {
+      background-color: rgb(0, 104, 0);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background: white;
+      margin: 2% auto;
+      padding: 25px;
+      border-radius: 10px;
+      width: 400px;
+      position: relative;
+    }
+
+    .modal-content h3 {
+      text-align: center;
+      color: #090244;
+      margin-bottom: 10px;
+    }
+
+    .modal-content label {
+      display: block;
+      margin: 8px 0 4px;
+      font-weight: 500;
+    }
+
+    .modal-content input {
+      width: 94%;
+      padding: 8px;
+      border: 1px solid #686767;
+      border-radius: 5px;
+    }
+
+    .modal-actions {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .close {
+      position: absolute;
+      right: 10px;
+      top: 5px;
+      font-size: 22px;
+      color: #056621;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>My Profile</h2>
+  <div class="header-btns">
+    <button onclick="window.location.href='jobseeker.html'">⮜⬅ Back to Dashboard</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="profile-title">Profile Details</div>
+
+  <div class="profile-info" id="profileInfo">
+    <p><strong>Full Name : </strong> <span id="fullName"></span></p>
+    <p><strong>Email : </strong> <span id="email"></span></p>
+    <p><strong>College :</strong> <span id="college"></span></p>
+    <p><strong>Education :</strong> <span id="education"></span></p>
+    <p><strong>Previous Organization :</strong> <span id="previousOrg"></span></p>
+    <p><strong>Skills :</strong> <span id="skills"></span></p>
+    <p><strong>Experience :</strong> <span id="experience"></span> years</p>
+    <p><strong>Resume :</strong> <a id="resumeDownload" href="#" target="_blank">View / Download Resume</a></p>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn" onclick="openEditProfile()">✏️ Edit Profile</button>
+    <button class="btn" id="acc" onclick="openAccountModal()">⚙️ Account Settings</button>
+  </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal" id="editProfileModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeEditProfile()">&times;</span>
+    <h3>Edit Profile</h3>
+
+    <label>Full Name</label>
+    <input type="text" id="editFullName">
+
+    <label>Email</label>
+    <input type="email" id="editEmaill">
+
+    <label>College</label>
+    <input type="text" id="editCollege">
+
+    <label>Previous Organization</label>
+    <input type="text" id="editPreviousOrg">
+
+    <label>Education</label>
+    <input type="text" id="editEducation">
+
+    <label>Skills</label>
+    <input type="text" id="editSkills">
+
+    <label>Experience (years)</label>
+    <input type="number" min="0" id="editExperience">
+
+    <label>Upload Resume</label>
+    <input type="file" id="resumeFile" name="file" accept=".pdf">
+
+    <div class="modal-actions">
+      <button class="btn" onclick="saveProfile()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Account Settings Modal -->
+<div class="modal" id="accountModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeAccountModal()">&times;</span>
+    <h3>Account Settings</h3>
+
+    <label>Username</label>
+    <input type="text" id="editUsername">
+
+    <label>Email</label>
+    <input type="text" id="editEmail">
+
+    <label>New Password</label>
+    <input type="password" id="editPassword">
+
+    <div class="modal-actions">
+      <button class="btn" onclick="saveAccount()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "http://localhost:8080";
+let currentProfile = {};
+
+async function loadProfile() {
+  try {
+    const res = await fetch(`${API_BASE}/jobseeker/profile`, { credentials: "include" });
+    if (!res.ok) throw new Error("Failed to load profile");
+    const data = await res.json();
+    currentProfile = data;
+    displayProfile(data);
+  } catch (err) {
+    alert("Please login first");
+    window.location.href = "login.html";
+  }
+}
+
+function displayProfile(data) {
+  document.getElementById("fullName").textContent = data.fullName || "";
+  document.getElementById("email").textContent = data.email || "";
+  document.getElementById("college").textContent = data.college || "";
+  document.getElementById("previousOrg").textContent = data.previousOrganization || "";
+  document.getElementById("education").textContent = data.education || "";
+  document.getElementById("skills").textContent = data.skills || "";
+  document.getElementById("experience").textContent =
+  data.experience !== undefined && data.experience !== null ? data.experience : "N/A";
+
+  //Show download link from backend
+  document.getElementById("resumeDownload").href = `${API_BASE}/jobseeker/profile/resume`;
+}
+
+function openEditProfile() {
+  document.getElementById("editFullName").value = currentProfile.fullName || "";
+  document.getElementById("editEmaill").value = currentProfile.email || "";
+  document.getElementById("editCollege").value = currentProfile.college || "";
+  document.getElementById("editPreviousOrg").value = currentProfile.previousOrganization || "";
+  document.getElementById("editEducation").value = currentProfile.education || "";
+  document.getElementById("editSkills").value = currentProfile.skills || "";
+
+  document.getElementById("editExperience").value =
+  currentProfile.experience !== undefined && currentProfile.experience !== null ? currentProfile.experience : "";
+
+  document.getElementById("editProfileModal").style.display = "block";
+}
+
+function closeEditProfile() {
+  document.getElementById("editProfileModal").style.display = "none";
+}
+
+async function saveProfile() {
+  const formData = new FormData();
+  formData.append("fullName", document.getElementById("editFullName").value);
+  formData.append("email", document.getElementById("editEmaill").value);
+  formData.append("college", document.getElementById("editCollege").value);
+  formData.append("previousOrganization", document.getElementById("editPreviousOrg").value);
+  formData.append("education", document.getElementById("editEducation").value);
+  formData.append("skills", document.getElementById("editSkills").value);
+  formData.append("experience", document.getElementById("editExperience").value);
+
+  const resumeFile = document.getElementById("resumeFile").files[0];
+  if (resumeFile) formData.append("file", resumeFile);
+
+  const res = await fetch(`${API_BASE}/jobseeker/update/profile`, {
+    method: "PUT",
+    credentials: "include",
+    body: formData,
+  });
+
+  if (res.ok) {
+    closeEditProfile();
+    loadProfile();
+    alert("updated successfully");
+  } else {
+    alert("Failed to update profile");
+  }
+}
+
+function openAccountModal() {
+  document.getElementById("editUsername").value = currentProfile.username || "";
+  document.getElementById("editEmail").value = currentProfile.email || "";
+  document.getElementById("editPassword").value = "";
+  document.getElementById("accountModal").style.display = "block";
+}
+
+function closeAccountModal() {
+  document.getElementById("accountModal").style.display = "none";
+}
+
+async function saveAccount() {
+  const updatedAccount = {
+    username: document.getElementById("editUsername").value,
+    email: document.getElementById("editEmail").value,
+    password: document.getElementById("editPassword").value
+  };
+
+  const res = await fetch(`${API_BASE}/front/update/username/password`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(updatedAccount)
+  });
+
+  if (res.ok) {
+    closeAccountModal();
+    loadProfile();
+  } else {
+    alert("Failed to update account");
+  }
+}
+
+window.onload = loadProfile;
+</script>
+
+</body>
+</html>           

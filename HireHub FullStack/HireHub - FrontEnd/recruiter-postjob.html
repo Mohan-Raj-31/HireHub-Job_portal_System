@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Post Job - HireHub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, "Open Sans", sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 96%;
+      border-radius: 20px;
+      background: #004aad;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 22px;
+      margin: 0;
+    }
+
+    header button {
+      background: white;
+      color: #004aad;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    header button:hover {
+      background: #e2e8f0;
+    }
+
+    .container {
+      background: #fff;
+      width: 600px;
+      margin-top: 40px;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .container h2 {
+      text-align: center;
+      color: #004aad;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: none;
+      height: 100px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #1257a6;
+    }
+
+    .status-msg {
+      text-align: center;
+      color: #333;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>HireHub 🎯</h1>
+    <button id="backBtn">← Back to Dashboard</button>
+  </header>
+
+  <div class="container">
+    <h2 id="formTitle">Post a New Job</h2>
+
+    <form id="jobForm">
+      <div class="form-group">
+        <label for="title">Job Title</label>
+        <input type="text" id="title" maxlength="70" required placeholder="e.g., Java Developer">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" maxlength="255" placeholder="Job responsibilities, required skills, etc."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" id="location" maxlength="50" placeholder="e.g., Chennai, Bengaluru">
+      </div>
+
+      <div class="form-group">
+        <label for="salary">Salary (₹ per annum)</label>
+        <input type="number" id="salary" min="0" placeholder="e.g., 500000">
+      </div>
+
+      <div class="form-group">
+        <label for="skills">Skills Required</label>
+        <input type="text" id="skills" maxlength="130" required placeholder="e.g., Java, Spring Boot, SQL">
+      </div>
+
+      <div class="form-group">
+        <label for="experience">Experience (Years)</label>
+        <input type="number" id="experience" min="0" placeholder="e.g., 2">
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">Post Job</button>
+    </form>
+
+    <div id="statusMsg" class="status-msg"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("jobForm");
+    const formTitle = document.getElementById("formTitle");
+    const submitBtn = document.getElementById("submitBtn");
+    const statusMsg = document.getElementById("statusMsg");
+    const backBtn = document.getElementById("backBtn");
+
+    const recruiterId = localStorage.getItem("userId");
+    const editJobId = localStorage.getItem("editJobId");
+
+    backBtn.onclick = () => window.location.href = "recruiter.html";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      if (!document.referrer.includes("recruiter-jobs.html")) {
+        // User didn’t come from “My Jobs” page → clear editJobId
+        localStorage.removeItem("editJobId");
+        editJobId = null;
+      }
+
+      if (editJobId) {
+        formTitle.textContent = "Edit Job";
+        submitBtn.textContent = "Update Job";
+
+        try {
+          const response = await fetch(`http://localhost:8080/front/jobs/${editJobId}`, {
+            method: "GET",
+            credentials: "include"
+          });
+          if (response.ok) {
+            const job = await response.json();
+            document.getElementById("title").value = job.title || "";
+            document.getElementById("description").value = job.description || "";
+            document.getElementById("location").value = job.location || "";
+            document.getElementById("salary").value = job.salary || "";
+            document.getElementById("skills").value = job.skillsRequired || "";
+            document.getElementById("experience").value = job.experience || "";
+          } else {
+            alert("Failed to load job details.");
+          }
+        } catch (err) {
+          console.error("Error loading job:", err);
+        }
+      } else {
+        // Reset form for new post
+        form.reset();
+      }
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const jobData = {
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        location: document.getElementById("location").value,
+        salary: parseFloat(document.getElementById("salary").value) || 0,
+        skillsRequired: document.getElementById("skills").value,
+        experience: parseInt(document.getElementById("experience").value) || 0
+      };
+
+      try {
+        const url = editJobId
+          ? `http://localhost:8080/recruiter/jobs/${editJobId}`
+          : `http://localhost:8080/recruiter/jobs`;
+
+        const method = editJobId ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+          method: method,
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(jobData)
+        });
+
+        if (response.ok) {
+          alert(editJobId ? "Job updated successfully!" : "Job posted successfully!");
+          localStorage.removeItem("editJobId");
+          window.location.href = "recruiter-jobs.html";
+        } else {
+          statusMsg.textContent = "Failed to save job. Try again.";
+        }
+      } catch (error) {
+        console.error("Error posting job:", error);
+        statusMsg.textContent = "An error occurred. Please try again.";
+      }
+    });
+  </script>
+</body>
+</html>

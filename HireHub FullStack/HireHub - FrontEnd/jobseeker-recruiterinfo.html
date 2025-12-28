@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HireHub - Recruiter Info</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f5f6fa;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(90deg, #0a6ed8, #003b8e);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .back-btn {
+      background-color: #fff;
+      color: #05478d;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #e9f2ff;
+      transform: translateY(-1px);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 40px;
+    }
+
+    .company-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+    }
+
+    .company-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #042649, #1683ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .company-info h2 {
+      margin: 0;
+      font-size: 26px;
+      color: #333;
+    }
+
+    .verified-badge {
+      background-color: #28a745;
+      color: white;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      margin-left: 10px;
+    }
+
+    .company-info p {
+      margin: 5px 0 0;
+      color: #555;
+    }
+
+    .details {
+      margin-top: 25px;
+      line-height: 1.8;
+      color: #444;
+    }
+
+    .details strong {
+      color: #222;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .company-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .company-logo {
+        width: 70px;
+        height: 70px;
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Recruiter Info</h1>
+    <button class="back-btn" id="backBtn">⮜⬅ Back to Job Details</button>
+  </header>
+
+  <main>
+    <div class="container" id="recruiterContainer">
+      <div class="company-header">
+        <div class="company-logo" id="companyLogo">H</div>
+        <div class="company-info">
+          <h2 id="companyName">Loading...</h2>
+          <span class="verified-badge">✔ Verified Recruiter</span>
+          <p id="location">Loading location...</p>
+        </div>
+      </div>
+
+      <div class="details">
+        <p><strong>Company Website:</strong> <a id="website" href="#" target="_blank">Loading...</a></p>
+        <p><strong>Company Description:</strong></p>
+        <p id="description">Loading description...</p>
+        <p><strong>Since:</strong> <span id="since">Loading...</span></p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API_BASE = "http://localhost:8080";
+
+    // Get recruiterId from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const recruiterId = urlParams.get("id");
+
+    async function loadRecruiterInfo() {
+      try {
+        const res = await fetch(`${API_BASE}/front/recruiter/${recruiterId}`, {
+          credentials: "include"
+        });
+
+        if (!res.ok) throw new Error("Failed to load recruiter info");
+
+        const recruiter = await res.json();
+
+        // Populate data
+        document.getElementById("companyName").textContent = recruiter.companyName || "N/A";
+        document.getElementById("location").textContent = recruiter.location || "Location not provided";
+        document.getElementById("description").textContent = recruiter.companyDescription || "No description available";
+        document.getElementById("since").textContent = recruiter.since || "N/A";
+
+        const website = recruiter.companyWebsite ? recruiter.companyWebsite : "#";
+        document.getElementById("website").textContent = website;
+        document.getElementById("website").href = website;
+
+        // Company logo first letter
+        const logoLetter = recruiter.companyName ? recruiter.companyName.charAt(0).toUpperCase() : "H";
+        document.getElementById("companyLogo").textContent = logoLetter;
+
+      } catch (err) {
+        console.error(err);
+        alert("Unable to load recruiter info.");
+      }
+    }
+
+    // Back button
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.history.back();
+    });
+
+    // Load data on page load
+    loadRecruiterInfo();
+  </script>
+
+</body>
+</html>

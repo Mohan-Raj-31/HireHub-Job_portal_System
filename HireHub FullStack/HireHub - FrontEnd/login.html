@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - HireHub</title>
+    <style>
+        
+        body{
+            margin:0;
+            font-family: "Segoe UI", Roboto, "Open Sans", sans-serif;
+            background:#f7f9fc ;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .auth-container {
+            background: #fff;
+            width: 400px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15) ;
+            text-align: center;
+        }
+        .auth-container h2 {
+            margin-bottom: 25px;
+            color:#1c76d0 ;
+        }
+
+        .form-group{
+            text-align: left;
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+        }
+        .form-group input {
+            width: 94%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: #1257a6;
+            }
+
+        .auth-footer {
+            margin-top: 18px;
+            font-size: 14px;
+        }
+        .auth-footer a {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="auth-container">
+        <h2>👤Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" minlength="3" autocomplete="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">password</label>
+                <input type="password" id="password" name="password" minlength="8" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <div class="auth-footer">
+           Don’t have an account? <a href="register.html">Register</a>
+        </div>  
+    </div>
+    
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+    try {
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+        credentials: "include"
+    });
+
+    if (!response.ok) {
+      alert("Invalid username or password");
+      return;
+    }
+
+        const user = await response.json(); // ✅ backend sends { id, username, role, email, ... }
+
+        // Store info for later use
+        localStorage.setItem("username", user.username);
+        localStorage.setItem("role", user.role);
+        localStorage.setItem("userId", user.id);
+
+        // ✅ Redirect based on role with profile check
+        switch (user.role) {
+            case "ADMIN":
+                window.location.href = "admin.html";
+                break;
+
+            case "RECRUITER":
+                checkRecruiterProfile();
+                break;
+
+            case "JOB_SEEKER":
+                checkJobSeekerProfile();
+                break;
+
+            default:
+                alert("Unknown role. Please contact support.");
+        }
+
+
+    } catch (error) {
+        console.error("Login error:", error);
+        alert("Something went wrong. Please try again later.");
+    }
+
+    async function checkRecruiterProfile() {
+        try {
+            const res = await fetch("http://localhost:8080/recruiter/profile/exists", {
+                credentials: "include",
+            });
+            const hasProfile = await res.json();
+
+            if (hasProfile) {
+                window.location.href = "recruiter.html";
+            } else {
+                window.location.href = "recruiter-createprofile.html";
+            }
+        } catch (err) {
+            console.error("Profile check failed:", err);
+            window.location.href = "recruiter.html";
+        }
+    }
+
+    async function checkJobSeekerProfile() {
+        try {
+            const res = await fetch("http://localhost:8080/jobseeker/profile/exists", {
+                credentials: "include",
+            });
+            const hasProfile = await res.json();
+
+            if (hasProfile) {
+                window.location.href = "jobseeker.html";
+            } else {
+                window.location.href = "jobseeker-createprofile.html";
+            }
+        } catch (err) {
+            console.error("Profile check failed:", err);
+            window.location.href = "jobseeker.html";
+        }
+    }
+
+
+    });
+    </script>
+</body>
+</html>
