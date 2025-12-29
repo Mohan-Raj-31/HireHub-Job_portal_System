@@ -1,17 +1,17 @@
-# Use Java 17 image
+# Use Eclipse Temurin JDK 21
 FROM eclipse-temurin:21-jdk
 
-# Set working directory
 WORKDIR /app
 
-# Copy backend files
+# Copy backend project
 COPY . .
 
-# Build project - skip tests
-RUN ./mvnw clean package -DskipTests
+# Build Spring Boot app using Maven
+RUN apt-get update && apt-get install -y maven
+RUN mvn clean package -DskipTests
 
 # Expose backend port
 EXPOSE 8080
 
 # Run application
-CMD ["java", "-jar", "target/*.jar"]
+ENTRYPOINT ["java", "-jar", "target/*.jar"]
