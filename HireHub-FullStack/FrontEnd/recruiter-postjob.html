@@ -182,7 +182,7 @@
         submitBtn.textContent = "Update Job";
 
         try {
-          const response = await fetch(`http://localhost:8080/front/jobs/${editJobId}`, {
+          const response = await fetch(`https://hirehub-backend-03b4.onrender.com/front/jobs/${editJobId}`, {
             method: "GET",
             credentials: "include"
           });
@@ -219,8 +219,8 @@
 
       try {
         const url = editJobId
-          ? `http://localhost:8080/recruiter/jobs/${editJobId}`
-          : `http://localhost:8080/recruiter/jobs`;
+          ? `https://hirehub-backend-03b4.onrender.com/recruiter/jobs/${editJobId}`
+          : `https://hirehub-backend-03b4.onrender.com/recruiter/jobs`;
 
         const method = editJobId ? "PUT" : "POST";
 
