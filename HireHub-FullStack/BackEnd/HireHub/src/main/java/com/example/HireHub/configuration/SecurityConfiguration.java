@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER")
                         .requestMatchers("/jobseeker/**").hasRole("JOB_SEEKER")
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults()) // allow for testing in postman
+//                .httpBasic(Customizer.withDefaults())     // allow for testing in postman
                 .formLogin(form -> form.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
