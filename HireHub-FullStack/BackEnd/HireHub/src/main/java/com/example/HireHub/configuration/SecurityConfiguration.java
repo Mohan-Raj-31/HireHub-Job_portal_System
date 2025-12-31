@@ -32,7 +32,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()   // public login/register endpoints
                         .requestMatchers("/front/**").permitAll()
@@ -42,12 +42,14 @@ public class SecurityConfiguration {
 //                .httpBasic(Customizer.withDefaults())     // allow for testing in postman
                 .formLogin(form -> form.disable())
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .logout(logout -> logout
-                .logoutUrl("/auth/logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")        
-                .permitAll());
+                        .logoutUrl("/auth/logout")
+                        .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                );
+
         return http.build();
     }
 
