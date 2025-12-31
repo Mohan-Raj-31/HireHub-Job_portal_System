@@ -157,12 +157,6 @@
     const urlParams = new URLSearchParams(window.location.search);
     const recruiterId = urlParams.get("id");
 
-    if (!recruiterId || recruiterId === "undefined" || recruiterId === null) {
-    alert("Invalid recruiter ID");
-    window.location.href = "jobseeker-jobdetails.html";
-    throw new Error("Invalid recruiter ID");
-    }
-
     async function loadRecruiterInfo() {
       try {
         const res = await fetch(`${API_BASE}/front/recruiter/${recruiterId}`, {

@@ -12,5 +12,7 @@ public interface RecruiterProfileRepository extends JpaRepository<RecruiterProfi
 
     Optional<RecruiterProfile> findByUserId(int userId);
 
+    Optional<RecruiterProfile> findById(int id);
+
     boolean existsByUserId(int userId);
 }

@@ -51,9 +51,9 @@ public class FrontController {
     }
 
     // View recruiter profile
-    @GetMapping("/recruiter/{userId}")
-    public ResponseEntity<RecruiterProfile> getRecruiterProfile(@PathVariable int userId){
-        return ResponseEntity.ok(frontService.getRecruiterProfile(userId));
+    @GetMapping("/recruiter/{id}")
+    public ResponseEntity<RecruiterProfile> getRecruiterProfile(@PathVariable int id){
+        return ResponseEntity.ok(frontService.getRecruiterProfile(id));
     }
 
     // update username password
