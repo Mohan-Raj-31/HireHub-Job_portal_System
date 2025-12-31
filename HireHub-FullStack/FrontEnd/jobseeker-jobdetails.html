@@ -249,6 +249,10 @@
         postedAtEl.textContent = new Date(job.postedAt).toLocaleString();
 
         recruiterBtn.onclick = () => {
+          if (!job || !job.recruiter) {
+            alert("Recruiter info not ready — try again");
+            return;
+          }
           window.location.href = `jobseeker-recruiterinfo.html?id=${job.recruiter.id}`;
         };
       } catch (err) {
