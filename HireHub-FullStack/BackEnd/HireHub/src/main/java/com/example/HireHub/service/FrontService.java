@@ -10,8 +10,11 @@ import com.example.HireHub.repository.RecruiterProfileRepository;
 import com.example.HireHub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -59,10 +62,16 @@ public class FrontService {
                 .orElseThrow(() -> new RuntimeException("Job Not found with this id: "+jobId));
     }
 
-    // View recruiter profile
+    // View recruiter profile - Using UserId - This is for recuriter login
     public RecruiterProfile getRecruiterProfile(int userId) {
         return recruiterProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Recruiter not found with id: " + userId));
+    }
+
+    // View recruiter profile - Using Id - This is for see recruiter Info In JobSeeker Login.
+    public RecruiterProfile getRecruiterProfileInJobSeeker(int Id) {
+        return recruiterProfileRepository.findById(Id)
+                .orElseThrow(() -> new RuntimeException("Recruiter not found with id: " + Id));
     }
 
     // update username password

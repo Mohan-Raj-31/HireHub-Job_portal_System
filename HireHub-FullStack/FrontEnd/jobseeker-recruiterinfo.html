@@ -154,16 +154,12 @@
     const API_BASE = "https://hirehub-backend-03b4.onrender.com";
 
     // Get recruiterId from URL
-    // const urlParams = new URLSearchParams(window.location.search);
-    const recruiterId = localStorage.getItem("userId");
-    console.log("happy.......................");
-    console.log(localStorage.getItem("userId"));
-    console.log(isNaN(localStorage.getItem("userId")));
-    console.log('happy');
+    const urlParams = new URLSearchParams(window.location.search);
+    const recruiterId = urlParams.get("id");
 
     async function loadRecruiterInfo() {
       try {
-        const res = await fetch(`${API_BASE}/front/recruiter/${recruiterId}`, {
+        const res = await fetch(`${API_BASE}/front/recruiterinfo/${recruiterId}`, {
           credentials: "include"
         });
 
