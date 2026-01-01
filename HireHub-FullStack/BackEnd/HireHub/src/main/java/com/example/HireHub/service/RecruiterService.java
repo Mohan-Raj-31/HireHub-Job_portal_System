@@ -79,6 +79,9 @@ public class RecruiterService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"you can only delete your own jobs");
         }
 
+        // DELETE applications first
+        applicationRepository.deleteByJobId(jobId);
+
         jobRepository.delete(job);
     }
 
