@@ -59,7 +59,7 @@ public class FrontController {
     // View recruiter profile - Using Id - This is for see recruiter Info In JobSeeker Login.
     @GetMapping("/recruiterinfo/{Id}")
     public ResponseEntity<RecruiterProfile> getRecruiterProfileInJobSeeker(@PathVariable int Id){
-        return ResponseEntity.ok(frontService.getRecruiterProfile(Id));
+        return ResponseEntity.ok(frontService.getRecruiterProfileInJobSeeker(Id));
     }
 
     // update username password
