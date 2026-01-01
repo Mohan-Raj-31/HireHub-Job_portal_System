@@ -18,5 +18,5 @@ public interface ApplicationRepository extends JpaRepository<Application,Integer
 
     List<Application> findByJobSeeker(JobSeekerProfile jobSeeker);
 
-    void deleteByJobId(int jobId);
+    void deleteByJob_id(int job_id);
 }
