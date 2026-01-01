@@ -26,4 +26,10 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginRequest,request));
     }
 
+    // Health Check for UptimeRobot..
+    @GetMapping("/health")
+    public ResponseEntity<String> authHealth(){
+        return ResponseEntity.ok("AUTH OK");
+    }
+
 }
