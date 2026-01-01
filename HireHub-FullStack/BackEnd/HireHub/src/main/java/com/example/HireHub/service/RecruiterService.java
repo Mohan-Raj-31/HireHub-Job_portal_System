@@ -80,7 +80,7 @@ public class RecruiterService {
         }
 
         // DELETE applications first
-        applicationRepository.deleteByJob_id(jobId);
+        applicationRepository.deleteByJobId(jobId);
 
         jobRepository.delete(job);
     }
