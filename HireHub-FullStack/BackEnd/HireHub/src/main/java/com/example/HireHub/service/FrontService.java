@@ -60,9 +60,9 @@ public class FrontService {
     }
 
     // View recruiter profile
-    public RecruiterProfile getRecruiterProfile(int id) {
-        return recruiterProfileRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Recruiter not found with id: " + id));
+    public RecruiterProfile getRecruiterProfile(int userId) {
+        return recruiterProfileRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Recruiter not found with id: " + userId));
     }
 
     // update username password

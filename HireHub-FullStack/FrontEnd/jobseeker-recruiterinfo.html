@@ -154,8 +154,8 @@
     const API_BASE = "https://hirehub-backend-03b4.onrender.com";
 
     // Get recruiterId from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const recruiterId = urlParams.get("id");
+    // const urlParams = new URLSearchParams(window.location.search);
+    const recruiterId = localStorage.getItem("userId");
 
     async function loadRecruiterInfo() {
       try {
