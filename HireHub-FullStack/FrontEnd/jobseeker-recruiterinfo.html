@@ -156,6 +156,10 @@
     // Get recruiterId from URL
     // const urlParams = new URLSearchParams(window.location.search);
     const recruiterId = localStorage.getItem("userId");
+    console.log("happy.......................");
+    console.log(localStorage.getItem("userId"));
+    console.log(isNaN(localStorage.getItem("userId")));
+    console.log('happy');
 
     async function loadRecruiterInfo() {
       try {
